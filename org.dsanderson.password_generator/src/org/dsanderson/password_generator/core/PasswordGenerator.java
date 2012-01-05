@@ -1,4 +1,4 @@
-package password_generator;
+package org.dsanderson.password_generator.core;
 
 import java.util.Random;
 

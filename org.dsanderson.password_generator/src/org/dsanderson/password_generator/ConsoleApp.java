@@ -1,4 +1,6 @@
-package password_generator;
+package org.dsanderson.password_generator;
+
+import org.dsanderson.password_generator.core.*;
 
 public class ConsoleApp {
 
