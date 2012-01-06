@@ -91,18 +91,18 @@ public class PasswordGenerator {
 		}
 	}
 
-	Integer length;
-	Boolean upperCaseLetters;
-	Boolean lowerCaseLetters;
-	Boolean numbers;
-	Boolean specialCharacters;
-	Random randomGenerator;
+	private Integer length;
+	private Boolean upperCaseLetters;
+	private Boolean lowerCaseLetters;
+	private Boolean numbers;
+	private Boolean specialCharacters;
+	private Random randomGenerator;
 
-	Boolean upperCaseOccurs;
-	Boolean lowerCaseOccurs;
-	Boolean numberOccurs;
-	Boolean specialCharacterOccurs;
-
+	private Boolean upperCaseOccurs;
+	private Boolean lowerCaseOccurs;
+	private Boolean numberOccurs;
+	private Boolean specialCharacterOccurs;
+	
 	private RandomCharacterGenerator upperCaseCharacterGenerator;
 	private RandomCharacterGenerator lowerCaseCharacterGenerator;
 	private RandomCharacterGenerator numericCharacterGenerator;
