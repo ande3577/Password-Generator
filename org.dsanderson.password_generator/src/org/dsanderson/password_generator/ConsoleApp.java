@@ -47,7 +47,7 @@ public class ConsoleApp {
 				lowerCaseWeight, numbersEnabled, numbersWeight,
 				specialCharactersEnabled, specialCharactersWeight);
 
-		System.out.print(generator.GeneratePassword());
+		System.out.println(generator.GeneratePassword());
 		System.exit(0);
 	}
 }
