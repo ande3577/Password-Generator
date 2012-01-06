@@ -53,12 +53,16 @@ public class PasswordGenerator {
 
 	private class RandomSpecialCharacterGenerator extends
 			IRandomCharacterGenerator {
+		public int weighting;
+		
 		private char STARTING_CHARACTERS[] = { '!', ':', '[', '{' };
 		private char ENDING_CHARACTERS[] = { '/', '@', '`', '~' };
 
 		private RandomCharacterGenerator specialCharacterGenerators[] = new RandomCharacterGenerator[STARTING_CHARACTERS.length];
 
 		public RandomSpecialCharacterGenerator(int Weighting) {
+			weighting = Weighting;
+			
 			for (int i = 0; i < STARTING_CHARACTERS.length; i++) {
 				specialCharacterGenerators[i] = new RandomCharacterGenerator(
 						STARTING_CHARACTERS[i], ENDING_CHARACTERS[i], Weighting);
@@ -176,13 +180,32 @@ public class PasswordGenerator {
 	public String GeneratePassword() {
 		int requiredLength = 0;
 		if (upperCaseLetters)
+		{
 			requiredLength++;
-		else if (lowerCaseLetters)
+			if (upperCaseCharacterGenerator.weighting == 0)
+				return "Error, cannot set weight to 0";
+		}
+		
+		if (lowerCaseLetters)
+		{
 			requiredLength++;
-		else if (numbers)
+			if (lowerCaseCharacterGenerator.weighting == 0)
+				return "Error, cannot set weight to 0";
+		}
+		
+		if (numbers)
+		{
 			requiredLength++;
-		else if (specialCharacters)
+			if (numericCharacterGenerator.weighting == 0)
+				return "Error, cannot set weight to 0";
+		}
+		
+		if (specialCharacters)
+		{
 			requiredLength++;
+			if (specialCharacterGenerator.weighting == 0)
+				return "Error, cannot set weight to 0";
+		}
 
 		if (requiredLength > length)
 			return String.format("error: length %d < required %d", length,

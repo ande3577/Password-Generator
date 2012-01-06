@@ -11,11 +11,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.text.NumberFormatter;
 
 import org.dsanderson.password_generator.core.PasswordGenerator;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
 
 public class PasswordGeneratorSwing {
 
@@ -65,38 +67,39 @@ public class PasswordGeneratorSwing {
 		chckbxUpperCaseEnable.setSelected(true);
 		frame.getContentPane().add(chckbxUpperCaseEnable, "cell 0 1");
 
-		final JFormattedTextField txtUpperCaseWeight = new JFormattedTextField();
-		txtUpperCaseWeight.setText("4");
+		final JFormattedTextField txtUpperCaseWeight = new JFormattedTextField(new NumberFormatter());
+		txtUpperCaseWeight.setText("1");
 		frame.getContentPane().add(txtUpperCaseWeight, "cell 1 1,growx");
 
 		final JCheckBox chckbxLowerCaseEnable = new JCheckBox("Lower Case");
 		chckbxLowerCaseEnable.setSelected(true);
 		frame.getContentPane().add(chckbxLowerCaseEnable, "cell 0 2");
 
-		final JFormattedTextField txtLowerCaseWeight = new JFormattedTextField();
-		txtLowerCaseWeight.setText("4");
+		final JFormattedTextField txtLowerCaseWeight = new JFormattedTextField(new NumberFormatter());
+		txtLowerCaseWeight.setText("1");
 		frame.getContentPane().add(txtLowerCaseWeight, "cell 1 2,growx");
 
 		final JCheckBox chckbxNumberEnable = new JCheckBox("Numbers");
 		chckbxNumberEnable.setSelected(true);
 		frame.getContentPane().add(chckbxNumberEnable, "cell 0 3");
 
-		final JFormattedTextField txtNumberWeight = new JFormattedTextField();
-		txtNumberWeight.setText("4");
+		final JFormattedTextField txtNumberWeight = new JFormattedTextField(new NumberFormatter());
+		txtNumberWeight.setText("1");
 		frame.getContentPane().add(txtNumberWeight, "cell 1 3,growx");
 
 		final JCheckBox chckbxSpecialCharEnable = new JCheckBox("Special Chars");
+		chckbxSpecialCharEnable.setSelected(true);
 		frame.getContentPane().add(chckbxSpecialCharEnable, "cell 0 4");
 
-		final JFormattedTextField txtSpecialCharWeight = new JFormattedTextField();
+		final JFormattedTextField txtSpecialCharWeight = new JFormattedTextField(new NumberFormatter());
 		txtSpecialCharWeight.setText("1");
 		frame.getContentPane().add(txtSpecialCharWeight, "cell 1 4,growx");
 
 		final JLabel lblLength = new JLabel("Length");
 		frame.getContentPane().add(lblLength, "cell 0 5,alignx trailing");
 
-		final JFormattedTextField txtLength = new JFormattedTextField();
-		txtLength.setText("10");
+		final JFormattedTextField txtLength = new JFormattedTextField(new NumberFormatter());
+		txtLength.setText("12");
 		frame.getContentPane().add(txtLength, "cell 1 5,growx");
 
 		final JLabel lblResult = new JLabel("Result");
