@@ -8,14 +8,14 @@ public class ConsoleApp {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int length = 10;
+		int length = 12;
 		Boolean upperCaseEnabled = true;
-		int upperCaseWeight = 4;
+		int upperCaseWeight = 1;
 		Boolean lowerCaseEnabled = true;
-		int lowerCaseWeight = 4;
+		int lowerCaseWeight = 1;
 		Boolean numbersEnabled = true;
-		int numbersWeight = 4;
-		Boolean specialCharactersEnabled = false;
+		int numbersWeight = 1;
+		Boolean specialCharactersEnabled = true;
 		int specialCharactersWeight = 1;
 
 		for (int i = 0; i < args.length; i++) {
@@ -36,7 +36,7 @@ public class ConsoleApp {
 			} else if (parameterName[0].matches("--numberweight")) {
 				numbersWeight = Integer.parseInt(parameterName[1]);
 			} else if (parameterName[0].matches("--special")) {
-				specialCharactersEnabled = parameterName[1].matches("true");
+				specialCharactersEnabled = !parameterName[1].matches("false");
 			} else if (parameterName[0].matches("--specialweight")) {
 				specialCharactersWeight = Integer.parseInt(parameterName[1]);
 			}

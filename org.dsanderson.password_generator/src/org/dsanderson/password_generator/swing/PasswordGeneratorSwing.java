@@ -3,9 +3,7 @@ package org.dsanderson.password_generator.swing;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.GridBagLayout;
 import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -17,7 +15,6 @@ import org.dsanderson.password_generator.core.PasswordGenerator;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.text.NumberFormat;
 
 public class PasswordGeneratorSwing {
 
