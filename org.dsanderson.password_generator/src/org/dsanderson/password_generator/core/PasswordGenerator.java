@@ -1,147 +1,99 @@
 package org.dsanderson.password_generator.core;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 public class PasswordGenerator {
 
 	private Integer length;
-	private Boolean upperCaseLetters;
-	private Boolean lowerCaseLetters;
-	private Boolean numbers;
-	private Boolean specialCharacters;
 	private Random randomGenerator;
 
-	private Boolean upperCaseOccurs;
-	private Boolean lowerCaseOccurs;
-	private Boolean numberOccurs;
-	private Boolean specialCharacterOccurs;
-	
-	private RandomCharacterGenerator upperCaseCharacterGenerator;
-	private RandomCharacterGenerator lowerCaseCharacterGenerator;
-	private RandomCharacterGenerator numericCharacterGenerator;
-	private RandomSpecialCharacterGenerator specialCharacterGenerator;
+	private ArrayList<IRandomCharacterGenerator> characterGenerators;
 
 	public PasswordGenerator(int Length, Boolean UpperCaseLetters,
 			int UpperCaseWeight, Boolean LowerCaseLetters, int LowerCaseWeight,
-			Boolean Numbers, int NumberWeight, Boolean SpecialCharacters,
+			boolean Numbers, int NumberWeight, boolean SpecialCharacters,
 			int SpecialCharacterWeight) {
 		length = Length;
-		upperCaseLetters = UpperCaseLetters;
-		lowerCaseLetters = LowerCaseLetters;
-		numbers = Numbers;
-		specialCharacters = SpecialCharacters;
 		randomGenerator = new Random();
+		characterGenerators = new ArrayList<IRandomCharacterGenerator>();
 
-		upperCaseCharacterGenerator = new RandomCharacterGenerator('A', 'Z',
-				UpperCaseWeight);
-		lowerCaseCharacterGenerator = new RandomCharacterGenerator('a', 'z',
-				LowerCaseWeight);
-		numericCharacterGenerator = new RandomCharacterGenerator('0', '9',
-				NumberWeight);
-		specialCharacterGenerator = new RandomSpecialCharacterGenerator(
-				SpecialCharacterWeight);
+		if (UpperCaseLetters)
+			characterGenerators.add(new RandomCharacterGenerator('A', 'Z',
+					UpperCaseWeight, true));
+
+		if (LowerCaseLetters)
+			characterGenerators.add(new RandomCharacterGenerator('a', 'z',
+					LowerCaseWeight, true));
+
+		if (Numbers)
+			characterGenerators.add(new RandomCharacterGenerator('0', '9',
+					NumberWeight, !(UpperCaseLetters || LowerCaseLetters)));
+
+		if (SpecialCharacters)
+			characterGenerators.add(new RandomSpecialCharacterGenerator(
+					SpecialCharacterWeight,
+					!(UpperCaseLetters || LowerCaseLetters)));
 	}
 
 	private int DetermineCharacterCount(int Index) {
 		int characterCount = 0;
-		Boolean requireLetter = (Index == 0)
-				&& (upperCaseLetters || lowerCaseLetters);
 
-		if (upperCaseLetters)
-			characterCount += upperCaseCharacterGenerator.NumberOfCharacters();
-		if (lowerCaseLetters)
-			characterCount += lowerCaseCharacterGenerator.NumberOfCharacters();
-		if (numbers && !requireLetter)
-			characterCount += numericCharacterGenerator.NumberOfCharacters();
-		if (specialCharacters && !requireLetter)
-			characterCount += specialCharacterGenerator.NumberOfCharacters();
+		// / \todo need to check for if this requires a letter
+		for (int i = 0; i < characterGenerators.size(); i++) {
+			characterCount += characterGenerators.get(i).NumberOfCharacters(
+					Index);
+		}
 
 		return characterCount;
 	}
 
-	private RandomData GenerateCharacter(int Index) {
-		RandomData randomData = new RandomData(
-				randomGenerator.nextInt(DetermineCharacterCount(Index)));
-		if (upperCaseLetters) {
-			randomData = upperCaseCharacterGenerator
-					.ConvertToRandomCharacter(randomData.randomNumber);
-			if (randomData.found)
-				upperCaseOccurs = true;
-		}
-		if (!randomData.found && lowerCaseLetters) {
-			randomData = lowerCaseCharacterGenerator
-					.ConvertToRandomCharacter(randomData.randomNumber);
-			if (randomData.found)
-				lowerCaseOccurs = true;
-		}
-		if (!randomData.found && numbers) {
-			randomData = numericCharacterGenerator
-					.ConvertToRandomCharacter(randomData.randomNumber);
-			if (randomData.found)
-				numberOccurs = true;
-		}
-		if (!randomData.found && specialCharacters) {
-			randomData = specialCharacterGenerator
-					.ConvertToRandomCharacter(randomData.randomNumber);
-			if (randomData.found)
-				specialCharacterOccurs = true;
-		}
+	private void GenerateCharacter(RandomData randomData, int Index) {
+		randomData.randomNumber = randomGenerator
+				.nextInt(DetermineCharacterCount(Index));
+		
+		randomData.found = false;
 
-		return randomData;
+		for (int i = 0; i < characterGenerators.size() && !randomData.found; i++) {
+			characterGenerators.get(i).ConvertToRandomCharacter(randomData,
+					Index);
+		}
 	}
 
 	public String GeneratePassword() {
-		int requiredLength = 0;
-		if (upperCaseLetters)
-		{
-			requiredLength++;
-			if (upperCaseCharacterGenerator.weighting == 0)
-				return "Error, cannot set weight to 0";
-		}
-		
-		if (lowerCaseLetters)
-		{
-			requiredLength++;
-			if (lowerCaseCharacterGenerator.weighting == 0)
-				return "Error, cannot set weight to 0";
-		}
-		
-		if (numbers)
-		{
-			requiredLength++;
-			if (numericCharacterGenerator.weighting == 0)
-				return "Error, cannot set weight to 0";
-		}
-		
-		if (specialCharacters)
-		{
-			requiredLength++;
-			if (specialCharacterGenerator.weighting == 0)
+		for (int i = 0; i < characterGenerators.size(); i++) {
+			IRandomCharacterGenerator randomCharacterGenerator = characterGenerators
+					.get(i);
+			if (randomCharacterGenerator.Weighting() == 0)
 				return "Error, cannot set weight to 0";
 		}
 
-		if (requiredLength > length)
+		if (characterGenerators.size() > length)
 			return String.format("error: length %d < required %d", length,
-					requiredLength);
+					characterGenerators.size());
 
 		String password;
 		do {
 			password = "";
 
-			upperCaseOccurs = !upperCaseLetters;
-			lowerCaseOccurs = !lowerCaseLetters;
-			numberOccurs = !numbers;
-			specialCharacterOccurs = !specialCharacters;
+			RandomData randomData = new RandomData(0);
 
 			for (int i = 0; i < length; i++) {
-				RandomData randomData = GenerateCharacter(i);
+				GenerateCharacter(randomData, i);
 				if (!randomData.found)
 					return "Invalid random character";
 				else
-					password += randomData.character;
+					password = randomData.randomString;
 			}
-		} while (!upperCaseOccurs || !lowerCaseOccurs || !numberOccurs
-				|| !specialCharacterOccurs);
+		} while (!CheckForRequiredCharacters());
 		return password;
+	}
+
+	private boolean CheckForRequiredCharacters() {
+		for (int i = 0; i < characterGenerators.size(); i++) {
+			if (!characterGenerators.get(i).Found())
+				return false;
+		}
+		return true;
 	}
 }

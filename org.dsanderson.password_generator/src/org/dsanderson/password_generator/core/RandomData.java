@@ -3,11 +3,11 @@ package org.dsanderson.password_generator.core;
 public class RandomData {
 	Boolean found;
 	int randomNumber;
-	char character;
+	String randomString;
 
 	RandomData(int RandomNumber) {
 		randomNumber = RandomNumber;
 		found = false;
-		character = '\0';
+		randomString = "";
 	}
 }

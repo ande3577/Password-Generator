@@ -10,7 +10,12 @@ import org.dsanderson.password_generator.core.RandomData;;
  *
  */
 public interface IRandomCharacterGenerator {
-	abstract RandomData ConvertToRandomCharacter(int RandomNumber);
+	abstract void ConvertToRandomCharacter(RandomData randomData, int Index);
 
-	abstract int NumberOfCharacters();
+	abstract int NumberOfCharacters(int Index);
+	
+	abstract boolean Found();
+	
+	abstract int Weighting();
+	
 }

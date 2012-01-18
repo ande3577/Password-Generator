@@ -110,7 +110,6 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		frame.getContentPane().add(txtNumberWeight, "cell 1 3,growx");
 
 		final JCheckBox chckbxSpecialCharEnable = new JCheckBox("Special Chars");
-		chckbxSpecialCharEnable.setSelected(true);
 		frame.getContentPane().add(chckbxSpecialCharEnable, "cell 0 4");
 
 		final JFormattedTextField txtSpecialCharWeight = new JFormattedTextField(
@@ -123,7 +122,7 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 
 		final JFormattedTextField txtLength = new JFormattedTextField(
 				new NumberFormatter());
-		txtLength.setText("12");
+		txtLength.setText("10");
 		frame.getContentPane().add(txtLength, "cell 1 5,growx");
 
 		final JLabel lblResult = new JLabel("Result");

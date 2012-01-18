@@ -2,40 +2,50 @@ package org.dsanderson.password_generator.core;
 
 public class RandomSpecialCharacterGenerator implements
 		IRandomCharacterGenerator {
-	public int weighting;
+	final int weighting;
 
 	private char STARTING_CHARACTERS[] = { '!', ':', '[', '{' };
 	private char ENDING_CHARACTERS[] = { '/', '@', '`', '~' };
 
 	private RandomCharacterGenerator specialCharacterGenerators[] = new RandomCharacterGenerator[STARTING_CHARACTERS.length];
 
-	public RandomSpecialCharacterGenerator(int Weighting) {
+	public RandomSpecialCharacterGenerator(int Weighting, boolean canBeFirst) {
 		weighting = Weighting;
 
 		for (int i = 0; i < STARTING_CHARACTERS.length; i++) {
 			specialCharacterGenerators[i] = new RandomCharacterGenerator(
-					STARTING_CHARACTERS[i], ENDING_CHARACTERS[i], Weighting);
+					STARTING_CHARACTERS[i], ENDING_CHARACTERS[i], Weighting,
+					canBeFirst);
 		}
 	}
 
-	public RandomData ConvertToRandomCharacter(int RandomNumber) {
-		RandomData randomData = new RandomData(RandomNumber);
-
+	public void ConvertToRandomCharacter(RandomData randomData, int Index) {
 		for (int i = 0; i < specialCharacterGenerators.length
 				&& !randomData.found; i++) {
-			randomData = specialCharacterGenerators[i]
-					.ConvertToRandomCharacter(randomData.randomNumber);
+			specialCharacterGenerators[i].ConvertToRandomCharacter(randomData, Index);
 		}
-
-		return randomData;
 	}
 
-	public int NumberOfCharacters() {
+	public int NumberOfCharacters(int Index) {
 		int numberOfCharacters = 0;
 		for (int i = 0; i < specialCharacterGenerators.length; i++) {
 			numberOfCharacters += specialCharacterGenerators[i]
-					.NumberOfCharacters();
+					.NumberOfCharacters(Index);
 		}
 		return numberOfCharacters;
 	}
+
+	public boolean Found() {
+		for (int i = 0; i < specialCharacterGenerators.length; i++) {
+			if (specialCharacterGenerators[i].Found())
+				return true;
+		}
+		return false;
+	}
+	
+	public int Weighting()
+	{
+		return weighting;
+	}
+	
 }
