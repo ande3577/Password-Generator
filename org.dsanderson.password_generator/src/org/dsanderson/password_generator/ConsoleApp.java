@@ -17,6 +17,7 @@ public class ConsoleApp {
 		int numbersWeight = 1;
 		Boolean specialCharactersEnabled = true;
 		int specialCharactersWeight = 1;
+		String keyword = "";
 
 		for (int i = 0; i < args.length; i++) {
 			String parameterName[] = args[i].split("=");
@@ -39,13 +40,15 @@ public class ConsoleApp {
 				specialCharactersEnabled = !parameterName[1].matches("false");
 			} else if (parameterName[0].matches("--specialweight")) {
 				specialCharactersWeight = Integer.parseInt(parameterName[1]);
+			} else if (parameterName[0].matches("--keyword")) {
+				keyword = parameterName[1];
 			}
 		}
 
 		PasswordGenerator generator = new PasswordGenerator(length,
 				upperCaseEnabled, upperCaseWeight, lowerCaseEnabled,
 				lowerCaseWeight, numbersEnabled, numbersWeight,
-				specialCharactersEnabled, specialCharactersWeight);
+				specialCharactersEnabled, specialCharactersWeight, keyword);
 
 		System.out.println(generator.GeneratePassword());
 		System.exit(0);

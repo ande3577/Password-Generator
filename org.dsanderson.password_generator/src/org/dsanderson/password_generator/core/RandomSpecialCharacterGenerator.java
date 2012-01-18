@@ -22,7 +22,8 @@ public class RandomSpecialCharacterGenerator implements
 	public void ConvertToRandomCharacter(RandomData randomData, int Index) {
 		for (int i = 0; i < specialCharacterGenerators.length
 				&& !randomData.found; i++) {
-			specialCharacterGenerators[i].ConvertToRandomCharacter(randomData, Index);
+			specialCharacterGenerators[i].ConvertToRandomCharacter(randomData,
+					Index);
 		}
 	}
 
@@ -42,10 +43,13 @@ public class RandomSpecialCharacterGenerator implements
 		}
 		return false;
 	}
-	
-	public int Weighting()
-	{
+
+	public int Weighting() {
 		return weighting;
 	}
-	
+
+	public int RequiredLength() {
+		return 1;
+	}
+
 }

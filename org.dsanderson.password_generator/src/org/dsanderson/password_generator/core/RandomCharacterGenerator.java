@@ -42,4 +42,8 @@ public class RandomCharacterGenerator implements IRandomCharacterGenerator {
 		return weighting;
 	}
 
+	public int RequiredLength() {
+		return 1;
+	}
+
 }

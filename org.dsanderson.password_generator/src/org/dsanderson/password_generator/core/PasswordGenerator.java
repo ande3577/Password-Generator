@@ -13,10 +13,14 @@ public class PasswordGenerator {
 	public PasswordGenerator(int Length, Boolean UpperCaseLetters,
 			int UpperCaseWeight, Boolean LowerCaseLetters, int LowerCaseWeight,
 			boolean Numbers, int NumberWeight, boolean SpecialCharacters,
-			int SpecialCharacterWeight) {
+			int SpecialCharacterWeight, String keyword) {
 		length = Length;
 		randomGenerator = new Random();
 		characterGenerators = new ArrayList<IRandomCharacterGenerator>();
+
+		if (keyword.length() > 0)
+			characterGenerators.add(new KeywordCharacterGenerator(keyword,
+					Length, randomGenerator));
 
 		if (UpperCaseLetters)
 			characterGenerators.add(new RandomCharacterGenerator('A', 'Z',
@@ -39,7 +43,6 @@ public class PasswordGenerator {
 	private int DetermineCharacterCount(int Index) {
 		int characterCount = 0;
 
-		// / \todo need to check for if this requires a letter
 		for (int i = 0; i < characterGenerators.size(); i++) {
 			characterCount += characterGenerators.get(i).NumberOfCharacters(
 					Index);
@@ -51,7 +54,7 @@ public class PasswordGenerator {
 	private void GenerateCharacter(RandomData randomData, int Index) {
 		randomData.randomNumber = randomGenerator
 				.nextInt(DetermineCharacterCount(Index));
-		
+
 		randomData.found = false;
 
 		for (int i = 0; i < characterGenerators.size() && !randomData.found; i++) {
@@ -61,14 +64,18 @@ public class PasswordGenerator {
 	}
 
 	public String GeneratePassword() {
+
+		int requiredLength = 0;
+
 		for (int i = 0; i < characterGenerators.size(); i++) {
 			IRandomCharacterGenerator randomCharacterGenerator = characterGenerators
 					.get(i);
+			requiredLength += randomCharacterGenerator.RequiredLength();
 			if (randomCharacterGenerator.Weighting() == 0)
 				return "Error, cannot set weight to 0";
 		}
 
-		if (characterGenerators.size() > length)
+		if (requiredLength > length)
 			return String.format("error: length %d < required %d", length,
 					characterGenerators.size());
 
@@ -78,8 +85,8 @@ public class PasswordGenerator {
 
 			RandomData randomData = new RandomData(0);
 
-			for (int i = 0; i < length; i++) {
-				GenerateCharacter(randomData, i);
+			while (password.length() < length) {
+				GenerateCharacter(randomData, password.length());
 				if (!randomData.found)
 					return "Invalid random character";
 				else

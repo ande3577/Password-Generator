@@ -26,11 +26,15 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import javax.swing.SwingConstants;
 
 public class PasswordGeneratorSwing implements ClipboardOwner {
 
 	private JFrame frame;
 	private JTextField txtPasswordResult;
+	private JFormattedTextField txtLength;
+	private JTextField txtKeyword;
+	private JMenuItem mntmCopyMenuItem;
 
 	/**
 	 * Launch the application.
@@ -74,13 +78,13 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(
-				new MigLayout("", "[][grow]", "[][][][][][][][]"));
+				new MigLayout("", "[][][grow]", "[][][][][][][][][]"));
 
 		JLabel lblNewLabel = new JLabel("Enable");
 		frame.getContentPane().add(lblNewLabel, "cell 0 0");
 
 		JLabel lblNewLabel_1 = new JLabel("Weight");
-		frame.getContentPane().add(lblNewLabel_1, "cell 1 0");
+		frame.getContentPane().add(lblNewLabel_1, "cell 2 0");
 
 		final JCheckBox chckbxUpperCaseEnable = new JCheckBox("Upper Case");
 		chckbxUpperCaseEnable.setSelected(true);
@@ -89,7 +93,7 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		final JFormattedTextField txtUpperCaseWeight = new JFormattedTextField(
 				new NumberFormatter());
 		txtUpperCaseWeight.setText("1");
-		frame.getContentPane().add(txtUpperCaseWeight, "cell 1 1,growx");
+		frame.getContentPane().add(txtUpperCaseWeight, "cell 2 1,growx");
 
 		final JCheckBox chckbxLowerCaseEnable = new JCheckBox("Lower Case");
 		chckbxLowerCaseEnable.setSelected(true);
@@ -98,7 +102,7 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		final JFormattedTextField txtLowerCaseWeight = new JFormattedTextField(
 				new NumberFormatter());
 		txtLowerCaseWeight.setText("1");
-		frame.getContentPane().add(txtLowerCaseWeight, "cell 1 2,growx");
+		frame.getContentPane().add(txtLowerCaseWeight, "cell 2 2,growx");
 
 		final JCheckBox chckbxNumberEnable = new JCheckBox("Numbers");
 		chckbxNumberEnable.setSelected(true);
@@ -107,7 +111,7 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		final JFormattedTextField txtNumberWeight = new JFormattedTextField(
 				new NumberFormatter());
 		txtNumberWeight.setText("1");
-		frame.getContentPane().add(txtNumberWeight, "cell 1 3,growx");
+		frame.getContentPane().add(txtNumberWeight, "cell 2 3,growx");
 
 		final JCheckBox chckbxSpecialCharEnable = new JCheckBox("Special Chars");
 		frame.getContentPane().add(chckbxSpecialCharEnable, "cell 0 4");
@@ -115,35 +119,7 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		final JFormattedTextField txtSpecialCharWeight = new JFormattedTextField(
 				new NumberFormatter());
 		txtSpecialCharWeight.setText("1");
-		frame.getContentPane().add(txtSpecialCharWeight, "cell 1 4,growx");
-
-		final JLabel lblLength = new JLabel("Length");
-		frame.getContentPane().add(lblLength, "cell 0 5,alignx trailing");
-
-		final JFormattedTextField txtLength = new JFormattedTextField(
-				new NumberFormatter());
-		txtLength.setText("10");
-		frame.getContentPane().add(txtLength, "cell 1 5,growx");
-
-		final JLabel lblResult = new JLabel("Result");
-		frame.getContentPane().add(lblResult, "cell 0 6,alignx trailing");
-
-		txtPasswordResult = new JTextField();
-		txtPasswordResult.setEditable(false);
-		frame.getContentPane().add(txtPasswordResult, "cell 1 6,growx");
-		txtPasswordResult.setColumns(10);
-
-		JPopupMenu resultPopupMenu = new JPopupMenu();
-		addPopup(txtPasswordResult, resultPopupMenu);
-
-		final JMenuItem mntmCopyMenuItem = new JMenuItem("Copy");
-		mntmCopyMenuItem.setEnabled(false);
-		mntmCopyMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setClipboardContents(txtPasswordResult.getText());
-			}
-		});
-		resultPopupMenu.add(mntmCopyMenuItem);
+		frame.getContentPane().add(txtSpecialCharWeight, "cell 2 4,growx");
 
 		JButton btnGenerate = new JButton("Generate");
 		btnGenerate.addActionListener(new ActionListener() {
@@ -169,13 +145,68 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 				PasswordGenerator passwordGenerator = new PasswordGenerator(
 						length, upperCaseEnable, upperCaseWeight,
 						lowerCaseEnable, lowerCaseWeight, numberEnable,
-						numberWeight, specialEnable, specialWeight);
+						numberWeight, specialEnable, specialWeight, txtKeyword
+								.getText());
 
 				txtPasswordResult.setText(passwordGenerator.GeneratePassword());
 				mntmCopyMenuItem.setEnabled(true);
 			}
 		});
-		frame.getContentPane().add(btnGenerate, "cell 1 7");
+
+		JLabel lblKeyword = new JLabel("Keyword");
+		frame.getContentPane().add(lblKeyword, "cell 0 5,alignx trailing");
+
+		txtKeyword = new JTextField();
+		frame.getContentPane().add(txtKeyword, "cell 2 5,growx");
+		txtKeyword.setColumns(10);
+
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(txtKeyword, popupMenu);
+
+		JMenuItem mntmCreateRandom = new JMenuItem("Create Random");
+		mntmCreateRandom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtKeyword.setText("HelloWorld");
+			}
+		});
+		popupMenu.add(mntmCreateRandom);
+
+		JMenuItem mntmClear = new JMenuItem("Clear");
+		mntmClear.setActionCommand("Clear");
+		mntmClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtKeyword.setText("");
+			}
+		});
+		popupMenu.add(mntmClear);
+
+		final JLabel lblLength = new JLabel("Length");
+		frame.getContentPane().add(lblLength, "cell 0 6,alignx trailing");
+
+		txtLength = new JFormattedTextField(new NumberFormatter());
+		txtLength.setText("10");
+		frame.getContentPane().add(txtLength, "cell 2 6,growx");
+
+		final JLabel lblResult = new JLabel("Result");
+		frame.getContentPane().add(lblResult, "cell 0 7,alignx trailing");
+
+		txtPasswordResult = new JTextField();
+		txtPasswordResult.setEditable(false);
+		frame.getContentPane().add(txtPasswordResult, "cell 2 7,growx");
+		txtPasswordResult.setColumns(10);
+
+		JPopupMenu resultPopupMenu = new JPopupMenu();
+		addPopup(txtPasswordResult, resultPopupMenu);
+
+		mntmCopyMenuItem = new JMenuItem("Copy");
+		mntmCopyMenuItem.setEnabled(false);
+		mntmCopyMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setClipboardContents(txtPasswordResult.getText());
+			}
+		});
+		resultPopupMenu.add(mntmCopyMenuItem);
+		frame.getContentPane().add(btnGenerate, "cell 2 8");
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
