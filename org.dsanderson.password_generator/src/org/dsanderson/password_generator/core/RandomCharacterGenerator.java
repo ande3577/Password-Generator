@@ -4,14 +4,12 @@ public class RandomCharacterGenerator implements IRandomCharacterGenerator {
 	final String characters;
 	final int weighting;
 	final boolean canBeFirst;
-	Boolean found;
 
 	public RandomCharacterGenerator(String characters, int weighting,
 			boolean canBeFirst) {
 		this.characters = characters;
 		this.weighting = weighting;
 		this.canBeFirst = canBeFirst;
-		found = false;
 	}
 
 	public RandomCharacterGenerator(char startingCharacter,
@@ -23,12 +21,10 @@ public class RandomCharacterGenerator implements IRandomCharacterGenerator {
 		this.characters = str;
 		this.weighting = weighting;
 		this.canBeFirst = canBeFirst;
-		found = false;
 	}
 
 	public void ConvertToRandomCharacter(RandomData randomData, int Index) {
 		if (randomData.randomNumber < NumberOfCharacters(Index)) {
-			found = true;
 			randomData.found = true;
 			randomData.randomString += characters
 					.charAt(randomData.randomNumber / weighting);
@@ -44,8 +40,12 @@ public class RandomCharacterGenerator implements IRandomCharacterGenerator {
 			return characters.length() * weighting;
 	}
 
-	public boolean Found() {
-		return found;
+	public boolean Found(String password) {
+		for (int index = 0; index < characters.length(); index++) {
+			if (password.contains(Character.toString(characters.charAt(index))))
+				return true;
+		}
+		return false;
 	}
 
 	public int Weighting() {

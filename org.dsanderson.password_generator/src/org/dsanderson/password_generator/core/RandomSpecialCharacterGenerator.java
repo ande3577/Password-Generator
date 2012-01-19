@@ -1,44 +1,42 @@
 package org.dsanderson.password_generator.core;
 
+import java.util.ArrayList;
+
 public class RandomSpecialCharacterGenerator implements
 		IRandomCharacterGenerator {
 	final int weighting;
+	final CompoundCharacterGenerator generator;
 
 	private char STARTING_CHARACTERS[] = { '!', ':', '[', '{' };
 	private char ENDING_CHARACTERS[] = { '/', '@', '`', '~' };
 
-	private RandomCharacterGenerator specialCharacterGenerators[] = new RandomCharacterGenerator[STARTING_CHARACTERS.length];
+	private ArrayList<IRandomCharacterGenerator> specialCharacterGenerators;
 
 	public RandomSpecialCharacterGenerator(int Weighting, boolean canBeFirst) {
 		weighting = Weighting;
 
+		specialCharacterGenerators = new ArrayList<IRandomCharacterGenerator>();
+
 		for (int i = 0; i < STARTING_CHARACTERS.length; i++) {
-			specialCharacterGenerators[i] = new RandomCharacterGenerator(
+			specialCharacterGenerators.add(new RandomCharacterGenerator(
 					STARTING_CHARACTERS[i], ENDING_CHARACTERS[i], Weighting,
-					canBeFirst);
+					canBeFirst));
 		}
+		generator = new CompoundCharacterGenerator(specialCharacterGenerators,
+				false);
 	}
 
 	public void ConvertToRandomCharacter(RandomData randomData, int Index) {
-		for (int i = 0; i < specialCharacterGenerators.length
-				&& !randomData.found; i++) {
-			specialCharacterGenerators[i].ConvertToRandomCharacter(randomData,
-					Index);
-		}
+		generator.ConvertToRandomCharacter(randomData, Index);
 	}
 
 	public int NumberOfCharacters(int Index) {
-		int numberOfCharacters = 0;
-		for (int i = 0; i < specialCharacterGenerators.length; i++) {
-			numberOfCharacters += specialCharacterGenerators[i]
-					.NumberOfCharacters(Index);
-		}
-		return numberOfCharacters;
+		return generator.NumberOfCharacters(Index);
 	}
 
-	public boolean Found() {
-		for (int i = 0; i < specialCharacterGenerators.length; i++) {
-			if (specialCharacterGenerators[i].Found())
+	public boolean Found(String password) {
+		for (int i = 0; i < specialCharacterGenerators.size(); i++) {
+			if (specialCharacterGenerators.get(i).Found(password))
 				return true;
 		}
 		return false;

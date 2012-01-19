@@ -33,7 +33,7 @@ public class KeywordCharacterGenerator implements IRandomCharacterGenerator {
 		return 0;
 	}
 
-	public boolean Found() {
+	public boolean Found(String password) {
 		return found;
 	}
 

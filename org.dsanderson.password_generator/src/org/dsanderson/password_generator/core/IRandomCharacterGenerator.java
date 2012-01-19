@@ -16,7 +16,7 @@ public interface IRandomCharacterGenerator {
 
 	abstract int NumberOfCharacters(int Index);
 
-	abstract boolean Found();
+	abstract boolean Found(String password);
 
 	abstract int Weighting();
 	

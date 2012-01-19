@@ -36,7 +36,7 @@ public class CompoundCharacterScrambler implements IRandomCharacterGenerator {
 					.toString(ch), 1, true));
 		}
 
-		generator = new CompoundCharacterGenerator(characterScramblers);
+		generator = new CompoundCharacterGenerator(characterScramblers, false);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CompoundCharacterScrambler implements IRandomCharacterGenerator {
 	}
 
 	@Override
-	public boolean Found() {
+	public boolean Found(String password) {
 		return true;
 	}
 

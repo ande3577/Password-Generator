@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 public class CompoundCharacterGenerator implements IRandomCharacterGenerator {
 	private final ArrayList<IRandomCharacterGenerator> characterGenerators;
+	private final boolean requireAll;
 
 	public CompoundCharacterGenerator(
-			ArrayList<IRandomCharacterGenerator> characterGenerators) {
+			ArrayList<IRandomCharacterGenerator> characterGenerators,
+			boolean requireAll) {
 		this.characterGenerators = characterGenerators;
+		this.requireAll = requireAll;
 	}
 
 	@Override
@@ -32,12 +35,20 @@ public class CompoundCharacterGenerator implements IRandomCharacterGenerator {
 	}
 
 	@Override
-	public boolean Found() {
-		for (int i = 0; i < characterGenerators.size(); i++) {
-			if (!characterGenerators.get(i).Found())
-				return false;
+	public boolean Found(String password) {
+		if (requireAll) {
+			for (int i = 0; i < characterGenerators.size(); i++) {
+				if (!characterGenerators.get(i).Found(password))
+					return false;
+			}
+			return true;
+		} else {
+			for (int i = 0; i < characterGenerators.size(); i++) {
+				if (characterGenerators.get(i).Found(password))
+					return true;
+			}
+			return false;
 		}
-		return true;
 	}
 
 	@Override
