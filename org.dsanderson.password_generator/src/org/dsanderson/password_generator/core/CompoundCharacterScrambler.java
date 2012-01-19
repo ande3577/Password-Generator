@@ -26,6 +26,11 @@ public class CompoundCharacterScrambler implements IRandomCharacterGenerator {
 						getNumericString(ch), settings.numericWeight,
 						!settings.upperCaseEnabled
 								&& !settings.lowerCaseEnabled));
+			if (settings.specialEnabled)
+				characterScramblers.add(new RandomCharacterGenerator(
+						getSpecialString(ch), settings.specialWeight,
+						!settings.upperCaseEnabled
+								&& !settings.lowerCaseEnabled));
 		} else {
 			characterScramblers.add(new RandomCharacterGenerator(Character
 					.toString(ch), 1, true));
@@ -84,4 +89,22 @@ public class CompoundCharacterScrambler implements IRandomCharacterGenerator {
 		}
 	}
 
+	private String getSpecialString(char ch) {
+		switch ((int) Character.toLowerCase(ch)) {
+		case 'i':
+			return "!|";
+		case 'a':
+			return "@";
+		case 's':
+			return "$";
+		case 'o':
+			return "*";
+		case 'c':
+			return "(";
+		case 'x':
+			return "+";
+		default:
+			return "";
+		}
+	}
 }
