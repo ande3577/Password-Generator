@@ -1,3 +1,8 @@
+/**
+ * @author David S Anderson
+ * 
+ * Copyright (C) 2012
+ */
 package org.dsanderson.password_generator;
 
 import org.dsanderson.password_generator.core.*;
@@ -14,6 +19,13 @@ public class ConsoleApp {
 		for (int i = 0; i < args.length; i++) {
 			String parameterName[] = args[i].split("=");
 
+			if (parameterName[0].matches("--version")) {
+				System.out.println(ProgramInfo.programName);
+				System.out.println(ProgramInfo.programVersion);
+				System.out.println(ProgramInfo.author);
+				System.out.println(ProgramInfo.copyright);
+				System.exit(0);
+			}
 			if (parameterName[0].matches("--length")) {
 				settings.passwordLength = Integer.parseInt(parameterName[1]);
 			} else if (parameterName[0].matches("--uppercase")) {

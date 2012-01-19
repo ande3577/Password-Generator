@@ -1,3 +1,9 @@
+/**
+ * @author David S Anderson
+ * 
+ * Copyright (C) 2012
+ */
+
 package org.dsanderson.password_generator.core;
 
 import java.util.ArrayList;
