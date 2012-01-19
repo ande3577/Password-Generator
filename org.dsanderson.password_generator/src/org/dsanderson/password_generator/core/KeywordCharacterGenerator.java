@@ -42,7 +42,13 @@ public class KeywordCharacterGenerator implements IRandomCharacterGenerator {
 	}
 
 	public int RequiredLength() {
-		return UserSettings.getInstance().keyword.length();
+		UserSettings settings = UserSettings.getInstance();
+		int requiredLength = settings.keyword.length();
+		if (settings.upperCaseEnabled && requiredLength > 0)
+			requiredLength--;
+		if (settings.lowerCaseEnabled && requiredLength > 0)
+			requiredLength--;
+		return requiredLength;
 	}
 
 }
