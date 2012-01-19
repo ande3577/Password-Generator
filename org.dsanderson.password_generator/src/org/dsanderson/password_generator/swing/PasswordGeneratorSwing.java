@@ -164,14 +164,6 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(txtKeyword, popupMenu);
 
-		JMenuItem mntmCreateRandom = new JMenuItem("Create Random");
-		mntmCreateRandom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				txtKeyword.setText("HelloWorld");
-			}
-		});
-		popupMenu.add(mntmCreateRandom);
-
 		JMenuItem mntmClear = new JMenuItem("Clear");
 		mntmClear.setActionCommand("Clear");
 		mntmClear.addActionListener(new ActionListener() {
