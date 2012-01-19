@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.text.NumberFormatter;
 
 import org.dsanderson.password_generator.core.PasswordGenerator;
+import org.dsanderson.password_generator.core.ProgramInfo;
 import org.dsanderson.password_generator.core.UserSettings;
 
 import java.awt.event.ActionListener;
@@ -126,6 +127,9 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 				new NumberFormatter());
 		txtSpecialCharWeight.setText("1");
 		frame.getContentPane().add(txtSpecialCharWeight, "cell 2 4,growx");
+
+		frame.setTitle(ProgramInfo.programName + " "
+				+ ProgramInfo.programVersion);
 
 		JButton btnGenerate = new JButton("Generate");
 		btnGenerate.addActionListener(new ActionListener() {
