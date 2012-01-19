@@ -20,7 +20,8 @@ public class PasswordGenerator {
 
 		if (keyword.length() > 0)
 			characterGenerators.add(new KeywordCharacterGenerator(keyword,
-					Length, randomGenerator));
+					Length, UpperCaseLetters, LowerCaseLetters, Numbers,
+					SpecialCharacters, randomGenerator));
 
 		if (UpperCaseLetters)
 			characterGenerators.add(new RandomCharacterGenerator('A', 'Z',
