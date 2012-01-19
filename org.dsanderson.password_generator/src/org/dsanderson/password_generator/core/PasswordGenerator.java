@@ -6,79 +6,57 @@ import java.util.ArrayList;
 public class PasswordGenerator {
 
 	private Integer length;
-	private Random randomGenerator;
 
 	private ArrayList<IRandomCharacterGenerator> characterGenerators;
 
-	public PasswordGenerator(int Length, Boolean UpperCaseLetters,
-			int UpperCaseWeight, Boolean LowerCaseLetters, int LowerCaseWeight,
-			boolean Numbers, int NumberWeight, boolean SpecialCharacters,
-			int SpecialCharacterWeight, String keyword) {
-		length = Length;
-		randomGenerator = new Random();
+	public PasswordGenerator() {
+		UserSettings settings = UserSettings.getInstance();
+		length = settings.passwordLength;
 		characterGenerators = new ArrayList<IRandomCharacterGenerator>();
 
-		if (keyword.length() > 0)
-			characterGenerators.add(new KeywordCharacterGenerator(keyword,
-					Length, UpperCaseLetters, LowerCaseLetters, Numbers,
-					SpecialCharacters, randomGenerator));
+		if (settings.keyword.length() > 0)
+			characterGenerators.add(new KeywordCharacterGenerator());
 
-		if (UpperCaseLetters)
+		if (settings.upperCaseEnabled)
 			characterGenerators.add(new RandomCharacterGenerator('A', 'Z',
-					UpperCaseWeight, true));
+					settings.upperCaseWeight, true));
 
-		if (LowerCaseLetters)
+		if (settings.lowerCaseEnabled)
 			characterGenerators.add(new RandomCharacterGenerator('a', 'z',
-					LowerCaseWeight, true));
+					settings.lowerCaseWeight, true));
 
-		if (Numbers)
+		if (settings.numericEnabled)
 			characterGenerators.add(new RandomCharacterGenerator('0', '9',
-					NumberWeight, !(UpperCaseLetters || LowerCaseLetters)));
+					settings.numericWeight,
+					!(settings.upperCaseEnabled || settings.lowerCaseEnabled)));
 
-		if (SpecialCharacters)
+		if (settings.specialEnabled)
 			characterGenerators.add(new RandomSpecialCharacterGenerator(
-					SpecialCharacterWeight,
-					!(UpperCaseLetters || LowerCaseLetters)));
-	}
-
-	private int DetermineCharacterCount(int Index) {
-		int characterCount = 0;
-
-		for (int i = 0; i < characterGenerators.size(); i++) {
-			characterCount += characterGenerators.get(i).NumberOfCharacters(
-					Index);
-		}
-
-		return characterCount;
-	}
-
-	private void GenerateCharacter(RandomData randomData, int Index) {
-		randomData.randomNumber = randomGenerator
-				.nextInt(DetermineCharacterCount(Index));
-
-		randomData.found = false;
-
-		for (int i = 0; i < characterGenerators.size() && !randomData.found; i++) {
-			characterGenerators.get(i).ConvertToRandomCharacter(randomData,
-					Index);
-		}
+					settings.specialWeight,
+					!(settings.upperCaseEnabled || settings.lowerCaseEnabled)));
 	}
 
 	public String GeneratePassword() {
 
-		int requiredLength = 0;
+		CompoundCharacterGenerator generator = new CompoundCharacterGenerator(
+				characterGenerators);
 
-		for (int i = 0; i < characterGenerators.size(); i++) {
-			IRandomCharacterGenerator randomCharacterGenerator = characterGenerators
-					.get(i);
-			requiredLength += randomCharacterGenerator.RequiredLength();
-			if (randomCharacterGenerator.Weighting() == 0)
-				return "Error, cannot set weight to 0";
-		}
+		UserSettings settings = UserSettings.getInstance();
 
-		if (requiredLength > length)
+		if (!settings.upperCaseEnabled && !settings.lowerCaseEnabled
+				&& !settings.numericEnabled && !settings.specialEnabled)
+			return "Requires at least one character type";
+
+		if (generator.RequiredLength() > length)
 			return String.format("error: length %d < required %d", length,
-					characterGenerators.size());
+					generator.RequiredLength());
+
+		if (generator.Weighting() <= 0)
+			return "Weight cannot be <= 0";
+
+		if ((settings.keyword.length() != 0) && !settings.upperCaseEnabled
+				&& !settings.lowerCaseEnabled)
+			return "Keyword requires upper or lower case letters";
 
 		String password;
 		do {
@@ -87,7 +65,8 @@ public class PasswordGenerator {
 			RandomData randomData = new RandomData(0);
 
 			while (password.length() < length) {
-				GenerateCharacter(randomData, password.length());
+				generator.ConvertToRandomCharacter(randomData,
+						password.length());
 				if (!randomData.found)
 					return "Invalid random character";
 				else

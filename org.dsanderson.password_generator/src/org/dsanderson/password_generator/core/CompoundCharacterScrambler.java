@@ -1,29 +1,57 @@
 package org.dsanderson.password_generator.core;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class CompoundCharacterScrambler implements ICharacterScrambler {
-	ArrayList<ICharacterScrambler> characterScramblers;
+public class CompoundCharacterScrambler implements IRandomCharacterGenerator {
+	final ArrayList<IRandomCharacterGenerator> characterScramblers = new ArrayList<IRandomCharacterGenerator>();
+	final CompoundCharacterGenerator generator;
 
-	public CompoundCharacterScrambler(boolean upperCaseEnabled,
-			boolean lowerCaseEnabled, boolean numericEnabled,
-			boolean specialEnabled, Random random) {
-		characterScramblers = new ArrayList<ICharacterScrambler>();
+	public CompoundCharacterScrambler(char ch) {
+		UserSettings settings = UserSettings.getInstance();
 
-		characterScramblers.add(new DefaultCharacterScrambler(upperCaseEnabled,
-				lowerCaseEnabled, numericEnabled, "", specialEnabled, "",
-				random));
+		characterScramblers.clear();
 
+		if (Character.isLetter(ch)) {
+			if (settings.upperCaseEnabled)
+				characterScramblers.add(new RandomCharacterGenerator(Character
+						.toString(Character.toUpperCase(ch)),
+						settings.upperCaseWeight, true));
+
+			if (settings.lowerCaseEnabled)
+				characterScramblers.add(new RandomCharacterGenerator(Character
+						.toString(Character.toLowerCase(ch)),
+						settings.lowerCaseWeight, true));
+		} else {
+			characterScramblers.add(new RandomCharacterGenerator(Character
+					.toString(ch), 1, true));
+		}
+
+		generator = new CompoundCharacterGenerator(characterScramblers);
 	}
 
 	@Override
-	public char scrambleCharacter(char ch) {
-		char returnChar = '\0';
-		for (int i = 0; i < characterScramblers.size() && returnChar == '\0'; i++) {
-			returnChar = characterScramblers.get(i).scrambleCharacter(ch);
-		}
-		return returnChar;
+	public void ConvertToRandomCharacter(RandomData randomData, int Index) {
+		generator.ConvertToRandomCharacter(randomData, Index);
+	}
+
+	@Override
+	public int NumberOfCharacters(int Index) {
+		return generator.NumberOfCharacters(Index);
+	}
+
+	@Override
+	public boolean Found() {
+		return true;
+	}
+
+	@Override
+	public int Weighting() {
+		return generator.Weighting();
+	}
+
+	@Override
+	public int RequiredLength() {
+		return 1;
 	}
 
 }

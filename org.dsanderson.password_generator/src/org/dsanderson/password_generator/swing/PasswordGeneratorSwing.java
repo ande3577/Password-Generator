@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.text.NumberFormatter;
 
 import org.dsanderson.password_generator.core.PasswordGenerator;
+import org.dsanderson.password_generator.core.UserSettings;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -125,28 +126,29 @@ public class PasswordGeneratorSwing implements ClipboardOwner {
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				int length = Integer.parseInt(txtLength.getText());
+				UserSettings settings = UserSettings.getInstance();
 
-				Boolean upperCaseEnable = chckbxUpperCaseEnable.isSelected();
-				int upperCaseWeight = Integer.parseInt(txtUpperCaseWeight
+				settings.passwordLength = Integer.parseInt(txtLength.getText());
+
+				settings.upperCaseEnabled = chckbxUpperCaseEnable.isSelected();
+				settings.upperCaseWeight = Integer.parseInt(txtUpperCaseWeight
 						.getText());
 
-				Boolean lowerCaseEnable = chckbxLowerCaseEnable.isSelected();
-				int lowerCaseWeight = Integer.parseInt(txtLowerCaseWeight
+				settings.lowerCaseEnabled = chckbxLowerCaseEnable.isSelected();
+				settings.lowerCaseWeight = Integer.parseInt(txtLowerCaseWeight
 						.getText());
 
-				Boolean numberEnable = chckbxNumberEnable.isSelected();
-				int numberWeight = Integer.parseInt(txtNumberWeight.getText());
-
-				Boolean specialEnable = chckbxSpecialCharEnable.isSelected();
-				int specialWeight = Integer.parseInt(txtSpecialCharWeight
+				settings.numericEnabled = chckbxNumberEnable.isSelected();
+				settings.numericWeight = Integer.parseInt(txtNumberWeight
 						.getText());
 
-				PasswordGenerator passwordGenerator = new PasswordGenerator(
-						length, upperCaseEnable, upperCaseWeight,
-						lowerCaseEnable, lowerCaseWeight, numberEnable,
-						numberWeight, specialEnable, specialWeight, txtKeyword
-								.getText());
+				settings.specialEnabled = chckbxSpecialCharEnable.isSelected();
+				settings.specialWeight = Integer.parseInt(txtSpecialCharWeight
+						.getText());
+
+				settings.keyword = txtKeyword.getText();
+
+				PasswordGenerator passwordGenerator = new PasswordGenerator();
 
 				txtPasswordResult.setText(passwordGenerator.GeneratePassword());
 				mntmCopyMenuItem.setEnabled(true);

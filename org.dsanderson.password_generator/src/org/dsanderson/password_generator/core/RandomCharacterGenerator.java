@@ -1,16 +1,26 @@
 package org.dsanderson.password_generator.core;
 
 public class RandomCharacterGenerator implements IRandomCharacterGenerator {
-	final int length;
-	final char startingCharacter;
+	final String characters;
 	final int weighting;
 	final boolean canBeFirst;
 	Boolean found;
 
+	public RandomCharacterGenerator(String characters, int weighting,
+			boolean canBeFirst) {
+		this.characters = characters;
+		this.weighting = weighting;
+		this.canBeFirst = canBeFirst;
+		found = false;
+	}
+
 	public RandomCharacterGenerator(char startingCharacter,
 			char endingCharacter, int weighting, boolean canBeFirst) {
-		length = endingCharacter - startingCharacter + 1;
-		this.startingCharacter = startingCharacter;
+		String str = "";
+		for (int index = (int) startingCharacter; index < (int) endingCharacter; index++) {
+			str += (char) index;
+		}
+		this.characters = str;
 		this.weighting = weighting;
 		this.canBeFirst = canBeFirst;
 		found = false;
@@ -20,8 +30,8 @@ public class RandomCharacterGenerator implements IRandomCharacterGenerator {
 		if (randomData.randomNumber < NumberOfCharacters(Index)) {
 			found = true;
 			randomData.found = true;
-			randomData.randomString += (char) (randomData.randomNumber
-					/ weighting + (int) startingCharacter);
+			randomData.randomString += characters
+					.charAt(randomData.randomNumber / weighting);
 		} else {
 			randomData.randomNumber -= NumberOfCharacters(Index);
 		}
@@ -31,7 +41,7 @@ public class RandomCharacterGenerator implements IRandomCharacterGenerator {
 		if (Index == 0 && !canBeFirst)
 			return 0;
 		else
-			return length * weighting;
+			return characters.length() * weighting;
 	}
 
 	public boolean Found() {

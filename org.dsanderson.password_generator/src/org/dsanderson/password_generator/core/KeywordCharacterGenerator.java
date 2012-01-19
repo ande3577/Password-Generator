@@ -3,40 +3,29 @@ package org.dsanderson.password_generator.core;
 import java.util.Random;
 
 public class KeywordCharacterGenerator implements IRandomCharacterGenerator {
-	private final String keyword;
 	private final int startingIndex;
-	private boolean found;
-	private CompoundCharacterScrambler scrambler;
+	private boolean found;;
 
-	public KeywordCharacterGenerator(String keyword, int passwordLength,
-			boolean upperCaseEnabled, boolean lowerCaseEnabled,
-			boolean numericEnabled, boolean specialEnabled,
-			Random randomGenerator) {
-		this.keyword = keyword;
-		startingIndex = randomGenerator.nextInt(passwordLength
-				- keyword.length() + 1);
+	public KeywordCharacterGenerator() {
+		UserSettings settings = UserSettings.getInstance();
+		startingIndex = settings.random
+				.nextInt(UserSettings.getInstance().passwordLength
+						- settings.keyword.length() + 1);
 		found = false;
-		scrambler = new CompoundCharacterScrambler(upperCaseEnabled,
-				lowerCaseEnabled, numericEnabled, specialEnabled,
-				randomGenerator);
 	}
 
 	public void ConvertToRandomCharacter(RandomData randomData, int Index) {
 		if (Index == startingIndex) {
-			String keywordString = "";
+			String keyword = UserSettings.getInstance().keyword;
 
-			for (int index = 0; index < keyword.length(); index++) {
-				char scrambledCh = scrambler.scrambleCharacter(keyword
-						.charAt(index));
-				if (scrambledCh == '\0') {
-					keywordString = keyword;
-					break;
-				} else {
-					keywordString += scrambledCh;
-				}
+			for (int i = 0; i < keyword.length(); i++) {
+
+				CompoundCharacterScrambler scrambler = new CompoundCharacterScrambler(
+						keyword.charAt(i));
+				randomData.randomNumber = UserSettings.getInstance().random
+						.nextInt(scrambler.NumberOfCharacters(Index));
+				scrambler.ConvertToRandomCharacter(randomData, Index);
 			}
-
-			randomData.randomString += keywordString;
 			randomData.found = true;
 			found = true;
 		}
@@ -55,7 +44,7 @@ public class KeywordCharacterGenerator implements IRandomCharacterGenerator {
 	}
 
 	public int RequiredLength() {
-		return keyword.length();
+		return UserSettings.getInstance().keyword.length();
 	}
 
 }
