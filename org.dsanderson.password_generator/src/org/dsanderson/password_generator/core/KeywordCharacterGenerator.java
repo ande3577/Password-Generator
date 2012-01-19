@@ -1,7 +1,5 @@
 package org.dsanderson.password_generator.core;
 
-import java.util.Random;
-
 public class KeywordCharacterGenerator implements IRandomCharacterGenerator {
 	private final int startingIndex;
 	private boolean found;;

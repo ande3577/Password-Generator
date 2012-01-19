@@ -27,7 +27,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import javax.swing.SwingConstants;
 
 public class PasswordGeneratorSwing implements ClipboardOwner {
 

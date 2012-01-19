@@ -1,6 +1,5 @@
 package org.dsanderson.password_generator.core;
 
-import java.util.Random;
 import java.util.ArrayList;
 
 public class PasswordGenerator {

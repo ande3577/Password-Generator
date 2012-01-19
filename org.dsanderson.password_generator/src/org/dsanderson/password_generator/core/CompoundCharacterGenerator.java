@@ -1,7 +1,6 @@
 package org.dsanderson.password_generator.core;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class CompoundCharacterGenerator implements IRandomCharacterGenerator {
 	private final ArrayList<IRandomCharacterGenerator> characterGenerators;
