@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, passwordgeneratorActivity!</string>
+    <string name="app_name">Password Generator</string>
+    <string name="length">10</string>
+    <string name="upperCaseWeight">1</string>
+    <string name="lengthString">Length</string>
+    <string name="upperCaseWeightString">Upper Case Weight</string>
+    <string name="lowerCaseWeightString">Lower Case Weight</string>
+    <string name="lowerCaseWeight">1</string>
+    <string name="passwordResult">        </string>
+    <string name="generateString">Generate</string>
+    <string name="upperCaseEnabled">Upper Case Enabled</string>
+    <string name="lowerCaseEnabled">Lower Case Enabled</string>
+    <string name="numericEnabled">Numeric Enabled</string>
+    <string name="numericWeightLabel">Numeric Weight</string>
+    <string name="numericWeight">1</string>
+    <string name="specialCharEnabled">Special Enabled</string>
+    <string name="specialWeightLabel">Special Weight</string>
+    <string name="specialWeight">1</string>
+    <string name="keywordLabel">Keyword</string>
+    <string name="keyword"></string>
+
+</resources>
