@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.dsanderson.password_generator.core.*;
 
@@ -43,7 +42,7 @@ public class passwordgeneratorActivity extends Activity {
 
 		UserSettings settings = UserSettings.getInstance();
 
-		TextView passwordResult = (TextView) findViewById(R.id.passwordResult);
+		EditText passwordResult = (EditText) findViewById(R.id.passwordResult);
 
 		settings.passwordLength = getIntFromEditTextId(R.id.length);
 

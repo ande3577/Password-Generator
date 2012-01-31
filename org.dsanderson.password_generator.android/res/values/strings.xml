@@ -21,5 +21,6 @@
     <string name="specialWeight">1</string>
     <string name="keywordLabel">Keyword</string>
     <string name="keyword"></string>
+    <string name="passwordResultLabel">Password Result</string>
 
 </resources>
