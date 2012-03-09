@@ -22,7 +22,11 @@ package org.dsanderson.password_generator.android;
 
 import org.dsanderson.passwordgenerator.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -35,6 +39,37 @@ public class passwordgeneratorActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.preferences:
+			openPreferencesMenu();
+			return true;
+		case R.id.about:
+			openAbout();
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+
+	private void openPreferencesMenu() {
+		// Launch Preference activity
+		Intent i = new Intent(this, PreferenceActivity.class);
+		startActivity(i);
+	}
+
+	private void openAbout() {
+
 	}
 
 	public void onGenerateButtonClicked(View view) {
@@ -57,7 +92,7 @@ public class passwordgeneratorActivity extends Activity {
 
 		settings.specialEnabled = getCheckedFromButtonId(R.id.specialEnabled);
 		settings.specialWeight = getIntFromEditTextId(R.id.specialWeight);
-		
+
 		settings.keyword = getStringFromEditTextId(R.id.keyword);
 
 		passwordResult.setText(generator.GeneratePassword());
