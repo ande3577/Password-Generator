@@ -100,57 +100,6 @@ public class passwordgeneratorActivity extends Activity {
 			}
 		});
 
-		EditText passwordResult = (EditText) findViewById(R.id.passwordResult);
-
-		passwordResult.setText(sharedPreferences.getString("password", ""));
-		passwordResult.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				SharedPreferences sharedPreferences = PreferenceManager
-						.getDefaultSharedPreferences(passwordgeneratorActivity.this);
-				Editor editor = sharedPreferences.edit();
-				editor.putString("password", s.toString());
-				editor.apply();
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
-
-		EditText keyword = (EditText) findViewById(R.id.keyword);
-
-		keyword.setText(sharedPreferences.getString("keyword", ""));
-		keyword.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				SharedPreferences sharedPreferences = PreferenceManager
-						.getDefaultSharedPreferences(passwordgeneratorActivity.this);
-				Editor editor = sharedPreferences.edit();
-				editor.putString("keyword", s.toString());
-				editor.apply();
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
 	}
 
 	@Override
