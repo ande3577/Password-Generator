@@ -69,7 +69,8 @@ public class passwordgeneratorActivity extends Activity {
 	}
 
 	private void openAbout() {
-
+		Intent i = new Intent(this, AboutActivity.class);
+		startActivity(i);
 	}
 
 	public void onGenerateButtonClicked(View view) {
