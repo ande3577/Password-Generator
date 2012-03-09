@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory android:title="Upper Case Letters">
         <CheckBoxPreference android:title="Enable" android:key="upperCaseEnabled" android:defaultValue="true"/>
-        <EditTextPreference android:key="upperCaseWeight" android:title="Weight"/>
+        <EditTextPreference android:key="upperCaseWeight" android:title="Weight" android:defaultValue="1"/>
         
     </PreferenceCategory><PreferenceCategory android:title="Lower Case Letters" android:defaultValue="1">
         <CheckBoxPreference android:key="lowerCaseEnabled" android:title="Enabled" android:defaultValue="true"/>
@@ -13,8 +13,8 @@
         <EditTextPreference android:key="numericWeight" android:title="Weight" android:defaultValue="1"/>
         
     </PreferenceCategory><PreferenceCategory android:title="Special Characters">
-        <CheckBoxPreference android:key="specialCharEnabled" android:title="Enabled" android:defaultValue="false"/>
-        <ListPreference android:key="specialCharWeight" android:title="Weight" android:defaultValue="1"/>
+        <CheckBoxPreference android:key="specialEnabled" android:title="Enabled" android:defaultValue="false"/>
+        <ListPreference android:key="specialWeight" android:title="Weight" android:defaultValue="1"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Restore Defaults">
         <Preference android:summary="Restore all values to factory settings" android:key="restoreDefaults" android:title="Restore Defaults"/>

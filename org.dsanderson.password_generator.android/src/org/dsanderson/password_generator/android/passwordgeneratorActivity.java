@@ -23,7 +23,13 @@ package org.dsanderson.password_generator.android;
 import org.dsanderson.passwordgenerator.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +45,112 @@ public class passwordgeneratorActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+
+		EditText length = (EditText) findViewById(R.id.length);
+
+		length.setText(sharedPreferences.getString("length", "10"));
+
+		sharedPreferences
+				.registerOnSharedPreferenceChangeListener(new OnSharedPreferenceChangeListener() {
+
+					@Override
+					public void onSharedPreferenceChanged(
+							SharedPreferences sharedPreferences, String key) {
+						EditText editText = null;
+						if (key == "length")
+							editText = (EditText) findViewById(R.id.length);
+						else if (key == "password")
+							editText = (EditText) findViewById(R.id.passwordResult);
+						else if (key == "keyword")
+							editText = (EditText) findViewById(R.id.keyword);
+
+						if (editText != null) {
+							String oldValue = editText.getText().toString();
+							String newValue = sharedPreferences.getString(key,
+									oldValue);
+							if (!newValue.equals(oldValue))
+								editText.setText(newValue);
+						}
+					}
+				});
+
+		length.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				SharedPreferences sharedPreferences = PreferenceManager
+						.getDefaultSharedPreferences(passwordgeneratorActivity.this);
+				Editor editor = sharedPreferences.edit();
+				editor.putString("length", s.toString());
+				editor.apply();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+
+		EditText passwordResult = (EditText) findViewById(R.id.passwordResult);
+
+		passwordResult.setText(sharedPreferences.getString("password", ""));
+		passwordResult.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				SharedPreferences sharedPreferences = PreferenceManager
+						.getDefaultSharedPreferences(passwordgeneratorActivity.this);
+				Editor editor = sharedPreferences.edit();
+				editor.putString("password", s.toString());
+				editor.apply();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+
+		EditText keyword = (EditText) findViewById(R.id.keyword);
+
+		keyword.setText(sharedPreferences.getString("keyword", ""));
+		keyword.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				SharedPreferences sharedPreferences = PreferenceManager
+						.getDefaultSharedPreferences(passwordgeneratorActivity.this);
+				Editor editor = sharedPreferences.edit();
+				editor.putString("keyword", s.toString());
+				editor.apply();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
 	}
 
 	@Override
@@ -82,22 +194,36 @@ public class passwordgeneratorActivity extends Activity {
 
 		settings.passwordLength = getIntFromEditTextId(R.id.length);
 
-		settings.upperCaseEnabled = getCheckedFromButtonId(R.id.upperCaseEnabled);
-		settings.upperCaseWeight = getIntFromEditTextId(R.id.upperCaseWeight);
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
-		settings.lowerCaseEnabled = getCheckedFromButtonId(R.id.lowerCaseEnabled);
-		settings.lowerCaseWeight = getIntFromEditTextId(R.id.lowerCaseWeight);
+		settings.upperCaseEnabled = sharedPreferences.getBoolean(
+				"upperCaseEnabled", true);
+		settings.upperCaseWeight = getInt(sharedPreferences, "upperCaseWeight",
+				1);
 
-		settings.numericEnabled = getCheckedFromButtonId(R.id.numericEnabled);
-		settings.numericWeight = getIntFromEditTextId(R.id.numericWeight);
+		settings.lowerCaseEnabled = sharedPreferences.getBoolean(
+				"lowerCaseEnabled", true);
+		settings.lowerCaseWeight = getInt(sharedPreferences, "lowerCaseWeight",
+				1);
 
-		settings.specialEnabled = getCheckedFromButtonId(R.id.specialEnabled);
-		settings.specialWeight = getIntFromEditTextId(R.id.specialWeight);
+		settings.numericEnabled = sharedPreferences.getBoolean(
+				"numericEnabled", true);
+		settings.numericWeight = getInt(sharedPreferences, "numericWeight", 1);
+
+		settings.specialEnabled = sharedPreferences.getBoolean(
+				"specialEnabled", false);
+		settings.specialWeight = getInt(sharedPreferences, "specialWeight", 1);
 
 		settings.keyword = getStringFromEditTextId(R.id.keyword);
 
 		passwordResult.setText(generator.GeneratePassword());
 
+	}
+
+	private int getInt(SharedPreferences preference, String key, int defValue) {
+		String string = preference.getString(key, Integer.toString(defValue));
+		return Integer.parseInt(string);
 	}
 
 	private int getIntFromEditTextId(int id) {
